@@ -82,6 +82,17 @@ public class MainApp {
 
         Box theGreatBox = new Box(10,10,10,"black");
         theGreatBox.getInfo();
+        theGreatBox.open();
+        theGreatBox.close();
 
+        theGreatBox.getObject();
+        theGreatBox.open();
+
+        theGreatBox.getObject();
+        theGreatBox.putObject();
+        theGreatBox.getObject();
+
+        theGreatBox.color = "red";
+        theGreatBox.getInfo();
     }
 }
