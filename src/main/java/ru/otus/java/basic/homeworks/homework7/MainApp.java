@@ -13,5 +13,6 @@ public class MainApp {
 
       human.getInto(bike);
       human.WannaGo(10, Landscape.SWAMP);
+      System.out.println("done");
     }
 }
