@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework5;
+package ru.otus.java.basic.homeworks.homework5.animals;
 
 public class Cat extends Animal {
     public Cat(String name, int speedRun, int speedSwim, int enduranceCount) {
@@ -11,7 +11,7 @@ public class Cat extends Animal {
 
     @Override
     public float swim(int distance) {
-        System.out.println("Коты не умеют плавать, даже " + distance + " метров");
+        System.out.println(String.format("Коты не умеют плавать, даже %d метров", distance));
         return -1f;
     }
 

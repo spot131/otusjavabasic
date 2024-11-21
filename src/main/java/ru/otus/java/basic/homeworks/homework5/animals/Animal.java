@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework5;
+package ru.otus.java.basic.homeworks.homework5.animals;
 
 public class Animal {
     String name;
@@ -13,27 +13,23 @@ public class Animal {
         return name;
     }
     public int getEndurance(){
-        System.out.println("Выносливость: " + enduranceCount);
         return enduranceCount;
     }
     public int getSpeedRun(){
-        System.out.println("Скорость бега " + name + ": " + speedRun+" м/с");
         return speedRun;
     }
     public int getSpeedSwim(){
-        System.out.println("Скорость плавания: " + name + ": "+ speedSwim+" м/с");
         return speedSwim;
     }
     public void makeSound(){
         System.out.println(sound);
     }
     public boolean info(){
-        System.out.println(name +" устал "+tired);
         return tired;
     }
 
     public float run(int distance) {
-        if (enduranceCount < (enduranceCount - distance * 1)) {
+        if (enduranceCount < distance ) {
             System.out.println(name + " устал");
             tired = true;
             return -1;
@@ -47,7 +43,7 @@ public class Animal {
     }
 
     public float swim(int distance) {
-        if (enduranceCount < (enduranceCount - distance * enduranceCost)) {
+        if (enduranceCount <  distance * enduranceCost) {
             System.out.println(name + " устал");
             tired = true;
             return -1;

@@ -1,4 +1,4 @@
-package ru.otus.java.basic.homeworks.homework5;
+package ru.otus.java.basic.homeworks.homework5.animals;
 
 public class Dog extends Animal {
     public Dog(String name, int speedRun, int speedSwim,int enduranceCount) {
