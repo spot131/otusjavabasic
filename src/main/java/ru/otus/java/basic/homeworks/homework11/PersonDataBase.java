@@ -1,7 +1,9 @@
 package ru.otus.java.basic.homeworks.homework11;
 
 import java.util.HashMap;
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 public class PersonDataBase {
     private Map<Long, Person> personMap = new HashMap<>();
@@ -14,35 +16,21 @@ public class PersonDataBase {
         personMap.put(person.id, person);
     }
 
+    private static final Set<Position> MANAGERIAL_POSITIONS = EnumSet.of(
+            Position.MANAGER,
+            Position.DIRECTOR,
+            Position.BRANCH_DIRECTOR,
+            Position.SENIOR_MANAGER
+    );
+
     public boolean isManager(Person person) {
-        if (person == null || person.position == null) {
-            return false;
-        }
-        switch (person.position) {
-            case MANAGER:
-            case DIRECTOR:
-            case BRANCH_DIRECTOR:
-            case SENIOR_MANAGER:
-                return true;
-            default:
-                return false;
-        }
+        return person != null && MANAGERIAL_POSITIONS.contains(person.position);
     }
 
     public boolean isEmployee(Long id) {
         Person person = findById(id);
-        if (person == null || person.position == null) {
-            return false;
-        }
 
-        switch (person.position) {
-            case MANAGER:
-            case DIRECTOR:
-            case BRANCH_DIRECTOR:
-            case SENIOR_MANAGER:
-                return false;
-            default:
-                return true;
-        }
+        return person != null && person.position != null && !MANAGERIAL_POSITIONS.contains(person.position);
     }
+
 }
