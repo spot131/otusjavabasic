@@ -21,12 +21,10 @@ public class MvCommand implements Command {
             return;
         }
 
-        // If destination is an existing directory, move the file into it
         if (Files.isDirectory(destination)) {
             destination = destination.resolve(source.getFileName());
         }
 
-        // Check if destination exists and warn the user
         if (Files.exists(destination)) {
             System.out.print("Warning: '" + destination.getFileName() + "' already exists. Overwrite? (y/n): ");
             Scanner scanner = new Scanner(System.in);

@@ -15,7 +15,6 @@ public class CdCommand implements Command {
         Path currentDir = Paths.get(System.getProperty("user.dir"));
         Path targetDir = currentDir.resolve(args[0]).normalize();
 
-        // Handle special case: "cd .." (Go to parent directory)
         if (args[0].equals("..")) {
             targetDir = currentDir.getParent();
         }

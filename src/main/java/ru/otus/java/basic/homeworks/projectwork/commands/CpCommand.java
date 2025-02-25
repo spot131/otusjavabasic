@@ -22,18 +22,15 @@ public class CpCommand implements Command {
             return;
         }
 
-        // If the source is a directory, prevent copying (for simplicity)
         if (Files.isDirectory(source)) {
             System.out.println("Error: Cannot copy a directory. Use a recursive copy method if needed.");
             return;
         }
 
-        // If the destination is a directory, place the file inside it
         if (Files.isDirectory(destination)) {
             destination = destination.resolve(source.getFileName());
         }
 
-        // If the destination does not exist, create an empty file
         try {
             if (!Files.exists(destination)) {
                 Files.createFile(destination);
@@ -43,7 +40,6 @@ public class CpCommand implements Command {
             return;
         }
 
-        // Check if the destination already exists and warn the user
         if (Files.exists(destination)) {
             System.out.print("Warning: '" + destination.getFileName() + "' already exists. Overwrite? (y/n): ");
             Scanner scanner = new Scanner(System.in);

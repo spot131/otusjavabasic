@@ -6,17 +6,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.Stream;
 
 public class LsCommand implements Command {
-    // ANSI escape codes for colors
     private static final String RESET = "\u001B[0m";
-    private static final String BLUE = "\u001B[34m";  // Blue for files
-    private static final String GREEN = "\u001B[32m"; // Green for directories
+    private static final String BLUE = "\u001B[34m";  // Blue
+    private static final String GREEN = "\u001B[32m"; // Green
 
     @Override
     public void execute(String[] args) {
         Path currentDir = Paths.get(System.getProperty("user.dir"));
         Path targetDir = currentDir;
 
-        // Check if a relative directory path is provided
         if (args.length > 0 && !args[0].equals("-i")) {
             targetDir = currentDir.resolve(args[0]).normalize();
             if (!Files.isDirectory(targetDir)) {

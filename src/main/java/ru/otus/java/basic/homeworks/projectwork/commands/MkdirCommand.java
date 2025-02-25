@@ -12,8 +12,7 @@ public class MkdirCommand implements Command {
         }
 
         Path currentDir = Paths.get(System.getProperty("user.dir"));
-        Path newDir = currentDir.resolve(args[0]).normalize(); // Resolve relative path
-
+        Path newDir = currentDir.resolve(args[0]).normalize();
         if (Files.exists(newDir)) {
             System.out.println("Error: Directory '" + args[0] + "' already exists.");
             return;
