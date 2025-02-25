@@ -13,6 +13,7 @@ public class ClientHandler {
     private DataOutputStream out;
 
     private String username;
+    private Role role;
     private static int userCount = 0;
 
     public ClientHandler(Socket socket, Server server) throws IOException {
@@ -23,6 +24,13 @@ public class ClientHandler {
 
         userCount++;
         username = "user" + userCount;
+        // Default role is USER
+        this.role = Role.USER;
+
+        // If username is "admin" or another condition, make the user an ADMIN
+        if (username.equals("user1")) {
+            role = Role.ADMIN;  // Example: user1 is assigned as ADMIN
+        }
 
         new Thread(() -> {
             try {
@@ -36,12 +44,18 @@ public class ClientHandler {
                             break;
                         }
                         if (message.startsWith("/w")) {
-                            // Handle private message
                             String[] parts = message.split(" ", 3);
                             if (parts.length == 3) {
                                 String targetUser = parts[1];
                                 String privateMessage = parts[2];
                                 server.sendPrivateMessage(username, targetUser, privateMessage);
+                            }
+                        }
+                        if (message.startsWith("/kick") && role == Role.ADMIN) {
+                            String[] parts = message.split(" ", 2);
+                            if (parts.length == 2) {
+                                String targetUser = parts[1];
+                                server.kickUser(targetUser);
                             }
                         }
                     } else {
@@ -92,4 +106,9 @@ public class ClientHandler {
     public String getUsername() {
         return username;
     }
+
+    public Role getRole() {
+        return role;
+    }
 }
+

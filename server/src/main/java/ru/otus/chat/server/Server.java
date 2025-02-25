@@ -15,41 +15,38 @@ public class Server {
         clients = new CopyOnWriteArrayList<>();
     }
 
-    public void start(){
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Сервер запущен на порту: " + port);
             while (true) {
                 Socket socket = serverSocket.accept();
                 subscribe(new ClientHandler(socket, this));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void subscribe(ClientHandler clientHandler){
+    public void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
     }
 
-    public void unsubscribe(ClientHandler clientHandler){
+    public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
-        broadcastMessage("Из чата вышел: "+ clientHandler.getUsername());
+        broadcastMessage("Из чата вышел: " + clientHandler.getUsername());
     }
 
-    public void broadcastMessage(String message){
+    public void broadcastMessage(String message) {
         for (ClientHandler c : clients) {
             c.sendMsg(message);
         }
     }
 
-    // New method to send a private message to a specific client by username
     public void sendPrivateMessage(String senderUsername, String recipientUsername, String message) {
         ClientHandler recipient = getClientByUsername(recipientUsername);
         if (recipient != null) {
             recipient.sendMsg("[Private] " + senderUsername + ": " + message);
         } else {
-            // Handle case when the recipient is not found
             for (ClientHandler client : clients) {
                 if (client.getUsername().equals(senderUsername)) {
                     client.sendMsg("User " + recipientUsername + " not found.");
@@ -58,7 +55,19 @@ public class Server {
         }
     }
 
-    // Helper method to find a client by their username
+    public void kickUser(String targetUsername) {
+        ClientHandler target = getClientByUsername(targetUsername);
+        if (target != null) {
+            target.sendMsg("You have been kicked from the chat by an admin.");
+            unsubscribe(target);
+            target.disconnect();
+        } else {
+            for (ClientHandler client : clients) {
+                client.sendMsg("User " + targetUsername + " not found.");
+            }
+        }
+    }
+
     private ClientHandler getClientByUsername(String username) {
         for (ClientHandler client : clients) {
             if (client.getUsername().equals(username)) {
@@ -68,4 +77,3 @@ public class Server {
         return null;
     }
 }
-
