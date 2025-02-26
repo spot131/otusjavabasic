@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-
 public class ClientHandler {
     private Socket socket;
     private Server server;
@@ -13,8 +12,7 @@ public class ClientHandler {
     private DataOutputStream out;
 
     private String username;
-    private Role role;
-    private static int userCount = 0;
+    private InMemoryAuthenticatedProvider.Role role;
 
     public ClientHandler(Socket socket, Server server) throws IOException {
         this.socket = socket;
@@ -22,20 +20,44 @@ public class ClientHandler {
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
 
-        userCount++;
-        username = "user" + userCount;
-        // Default role is USER
-        this.role = Role.USER;
-
-        // If username is "admin" or another condition, make the user an ADMIN
-        if (username.equals("user1")) {
-            role = Role.ADMIN;  // Example: user1 is assigned as ADMIN
-        }
-
         new Thread(() -> {
             try {
-                System.out.println("Клиент подключился " + socket.getPort());
+                System.out.println("Клиент подключился на порту: " + socket.getPort());
+                while (true) {
+                    sendMsg("Для начала работы надо пройти аутентификацию. Формат команды /auth login password \n" +
+                            "или регистрацию. Формат команды /reg login password username ");
 
+                    String message = in.readUTF();
+                    if (message.startsWith("/")) {
+                        if (message.equalsIgnoreCase("/exit")) {
+                            sendMsg("/exitok");
+                            break;
+                        }
+                        if (message.startsWith("/auth ")) {
+                            String[] element = message.split(" ");
+                            if (element.length != 3) {
+                                sendMsg("Неверный формат команды /auth");
+                                continue;
+                            }
+                            if (server.getAuthenticatedProvider()
+                                    .authenticate(this, element[1], element[2])) {
+
+                                break;
+                            }
+                        }
+                        if (message.startsWith("/reg ")) {
+                            String[] element = message.split(" ");
+                            if (element.length != 4) {
+                                sendMsg("Неверный формат команды /reg");
+                                continue;
+                            }
+                            if (server.getAuthenticatedProvider()
+                                    .registration(this, element[1], element[2], element[3])) {
+                                break;
+                            }
+                        }
+                    }
+                }
                 while (true) {
                     String message = in.readUTF();
                     if (message.startsWith("/")) {
@@ -43,20 +65,9 @@ public class ClientHandler {
                             sendMsg("/exitok");
                             break;
                         }
-                        if (message.startsWith("/w")) {
-                            String[] parts = message.split(" ", 3);
-                            if (parts.length == 3) {
-                                String targetUser = parts[1];
-                                String privateMessage = parts[2];
-                                server.sendPrivateMessage(username, targetUser, privateMessage);
-                            }
-                        }
-                        if (message.startsWith("/kick") && role == Role.ADMIN) {
-                            String[] parts = message.split(" ", 2);
-                            if (parts.length == 2) {
-                                String targetUser = parts[1];
-                                server.kickUser(targetUser);
-                            }
+                        if (message.startsWith("/kick ") && this.role == InMemoryAuthenticatedProvider.Role.ADMIN) {
+                            String targetUsername = message.split(" ")[1];
+                            server.kickUser(targetUsername);
                         }
                     } else {
                         server.broadcastMessage(username + " : " + message);
@@ -107,8 +118,12 @@ public class ClientHandler {
         return username;
     }
 
-    public Role getRole() {
+    public void setUsername(String username) {
+        this.username = username;
+        this.role = server.getAuthenticatedProvider().getRoleByUsername(username);
+    }
+
+    public InMemoryAuthenticatedProvider.Role getRole() {
         return role;
     }
 }
-
