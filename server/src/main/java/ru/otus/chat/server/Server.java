@@ -9,12 +9,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Server {
     private int port;
     private List<ClientHandler> clients;
-    private InMemoryAuthenticatedProvider authenticatedProvider;
+    private SQLiteAuthenticatedProvider authenticatedProvider;
 
     public Server(int port) {
         this.port = port;
         clients = new CopyOnWriteArrayList<>();
-        authenticatedProvider = new InMemoryAuthenticatedProvider(this);
+        authenticatedProvider = new SQLiteAuthenticatedProvider();
     }
 
     public void start() {
@@ -64,7 +64,7 @@ public class Server {
         }
     }
 
-    public InMemoryAuthenticatedProvider getAuthenticatedProvider() {
+    public SQLiteAuthenticatedProvider getAuthenticatedProvider() {
         return authenticatedProvider;
     }
 }
