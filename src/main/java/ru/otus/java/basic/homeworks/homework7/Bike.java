@@ -1,25 +1,13 @@
 package ru.otus.java.basic.homeworks.homework7;
 
-public class Bike implements Transport{
-    int maxDistance;
-
-    public Bike(int maxDistance) {
-        this.maxDistance = maxDistance;
-    }
-
+class Bike implements Transport {
     @Override
-    public boolean run(int distance, Landscape land) {
-        if (land == Landscape.SWAMP) {
-            System.out.println("велосипед не может перемещаться по такой местности");
+    public boolean move(int distance, Terrain terrain) {
+        if (terrain == Terrain.SWAMP) {
+            System.out.println("Велосипед не может двигаться по болоту!");
             return false;
         }
-        if (maxDistance < distance){
-            System.out.println("человеку не хватает сил");
-            return false;
-        }
-        System.out.println("человек успешно проехал " + distance);
-        maxDistance -= distance;
-        System.out.println("Сил осталось " + maxDistance);
+        System.out.println("Велосипед проехал " + distance + " км.");
         return true;
     }
 }

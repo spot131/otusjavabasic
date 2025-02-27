@@ -1,34 +1,28 @@
 package ru.otus.java.basic.homeworks.homework7;
 
-public class Human {
+class Human {
     private String name;
     private Transport currentTransport;
-    private int maxDistance = 20;
-
-    public int getMaxDistance() {
-        return maxDistance;
-    }
 
     public Human(String name) {
         this.name = name;
     }
 
-    public boolean getInto(Transport transport){
-        currentTransport = transport;
-        System.out.println(name + " сел в " + transport.getClass());
-        return true;
+    public void boardTransport(Transport transport) {
+        this.currentTransport = transport;
+        System.out.println(name + " залез в " + transport.getClass().getSimpleName());
     }
 
-    public boolean getOut(){
-        currentTransport = null;
-        return true;
+    public void dismount() {
+        this.currentTransport = null;
+        System.out.println(name + " вылез");
     }
 
-    public boolean WannaGo(int distance, Landscape landscape){
-        if (currentTransport == null){
-
+    public boolean move(int distance, Terrain terrain) {
+        if (currentTransport != null) {
+            return currentTransport.move(distance, terrain);
         }
-        currentTransport.run(distance, landscape);
+        System.out.println(name + " прошел " + distance + " км.");
         return true;
     }
 }

@@ -1,25 +1,24 @@
 package ru.otus.java.basic.homeworks.homework7;
 
-public class Car implements Transport {
-    private int maxDistance;
+class Car implements Transport {
+    private int fuel;
 
-    public Car(int maxDistance) {
-        this.maxDistance = maxDistance;
+    public Car(int fuel) {
+        this.fuel = fuel;
     }
 
     @Override
-    public boolean run(int distance, Landscape land) {
-        if (land == Landscape.FOREST || land == Landscape.SWAMP) {
-            System.out.println("Машина не может перемещаться по такой местности");
+    public boolean move(int distance, Terrain terrain) {
+        if (terrain == Terrain.FOREST || terrain == Terrain.SWAMP) {
+            System.out.println("Авто не может двигаться по этой местности");
             return false;
         }
-        if (maxDistance < distance){
-            System.out.println("Машине не хватает топлива");
-            return false;
+        if (fuel >= distance) {
+            fuel -= distance;
+            System.out.println("Авто проехало " + distance + " км. Оставшееся топливо: " + fuel);
+            return true;
         }
-        System.out.println("Машина успешно проехала " + distance);
-        maxDistance -= distance;
-        System.out.println("Топлива в баке осталось " + maxDistance);
-        return true;
+        System.out.println("Недостаточно топлива!");
+        return false;
     }
 }

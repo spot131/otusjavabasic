@@ -1,24 +1,24 @@
 package ru.otus.java.basic.homeworks.homework7;
 
-public class Horse implements Transport {
-    private int maxDistance;
+class Horse implements Transport {
+    private int energy;
 
-    public Horse(int maxDistance) {
-        this.maxDistance = maxDistance;
+    public Horse(int energy) {
+        this.energy = energy;
     }
 
-    public boolean run(int distance, Landscape land) {
-        if (land == Landscape.SWAMP) {
-            System.out.println("Лошадь не может перемещаться по такой местности");
+    @Override
+    public boolean move(int distance, Terrain terrain) {
+        if (terrain == Terrain.SWAMP) {
+            System.out.println("лошадь не может двигаться по болоту!");
             return false;
         }
-        if (maxDistance < distance){
-            System.out.println("Лошади не хватает сил");
-            return false;
+        if (energy >= distance) {
+            energy -= distance;
+            System.out.println("Лошадь прошла " + distance + " км. оставшиеся силы: " + energy);
+            return true;
         }
-        System.out.println("Лошадь успешно проехала " + distance);
-        maxDistance -= distance;
-        System.out.println("Сил осталось " + maxDistance);
-        return true;
+        System.out.println("лошадь слишком устала!");
+        return false;
     }
 }
